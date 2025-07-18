@@ -3,9 +3,9 @@ brief: Short description of gr-hsdec
 tags: # Tags are arbitrary, but look at CGRAN what other authors are using
   - sdr
 author:
-  - Author Name <authors@email.address>
+  - Author Name <CLA_179@outlook.com>
 copyright_owner:
-  - Copyright Owner 1
+  - CLA_179(BG2FWT)
 license:
 gr_supported_version: # Put a comma separated list of supported GR versions here
 #repo: # Put the URL of the repository here, or leave blank for default
