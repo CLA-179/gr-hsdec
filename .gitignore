@@ -1,0 +1,5 @@
+/build/
+/.vscode/
+/examples/**/*.py
+/examples/**/*.bin
+/examples/**/*.wav
