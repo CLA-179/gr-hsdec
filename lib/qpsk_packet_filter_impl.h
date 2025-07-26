@@ -5,15 +5,15 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_HSDEC_PACKET_FILTER_IMPL_H
-#define INCLUDED_HSDEC_PACKET_FILTER_IMPL_H
+#ifndef INCLUDED_HSDEC_QPSK_PACKET_FILTER_IMPL_H
+#define INCLUDED_HSDEC_QPSK_PACKET_FILTER_IMPL_H
 
-#include <gnuradio/hsdec/packet_filter.h>
+#include <gnuradio/hsdec/qpsk_packet_filter.h>
 
 namespace gr {
 namespace hsdec {
 
-class packet_filter_impl : public packet_filter
+class qpsk_packet_filter_impl : public qpsk_packet_filter
 {
 private:
     // Nothing to declare in this block.
@@ -26,14 +26,12 @@ private:
     struct FrameInfo {
         uint64_t offset;
         int length;
-        bool flip_flag;
+        uint8_t flip_phi;
     };
 
 public:
-    packet_filter_impl(int chunk_len, int sps);
-    ~packet_filter_impl();
-
-    void set_size(int size) override;
+    qpsk_packet_filter_impl(int chunk_len, int sps);
+    ~qpsk_packet_filter_impl();
 
     // Where all the action really happens
     void forecast(int noutput_items, gr_vector_int& ninput_items_required);
@@ -47,4 +45,4 @@ public:
 } // namespace hsdec
 } // namespace gr
 
-#endif /* INCLUDED_HSDEC_PACKET_FILTER_IMPL_H */
+#endif /* INCLUDED_HSDEC_QPSK_PACKET_FILTER_IMPL_H */

@@ -35,7 +35,7 @@ frame_sync_impl::frame_sync_impl(uint32_t code, int len, int block_size)
     g_block_size = block_size;
     g_len = len;
 
-    set_output_multiple(block_size*2);
+    set_output_multiple(block_size);
 
     printf("sync code : %#08X\n", g_code);
 }
@@ -50,7 +50,7 @@ void frame_sync_impl::forecast(int noutput_items, gr_vector_int& ninput_items_re
     ninput_items_required[0] = noutput_items;
 }
 
-int count_one32(unsigned int in)
+static int count_one32(unsigned int in)
 {
     static int out[16] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
 
@@ -108,6 +108,18 @@ int frame_sync_impl::general_work(int noutput_items,
                 pmt::intern("sync_head"),
                 pmt::from_long(g_len*8+32)
             );
+            d_skip_count = g_len * 8;
+        }
+        else if (nwrong >= 32 - d_threshold) {
+            // printf("sync:%ld\n", abs_offset + i - 32 + 1);
+            // Match found
+            add_item_tag(
+                0,                      // 输出端口
+                abs_offset + i - 32 + 1,    // tag 位置
+                pmt::intern("sync_head_flip"),
+                pmt::from_long(g_len*8+32)
+            );
+            
             d_skip_count = g_len * 8;
         }
     }

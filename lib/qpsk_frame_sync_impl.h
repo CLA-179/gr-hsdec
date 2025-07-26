@@ -5,35 +5,33 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_HSDEC_PACKET_FILTER_IMPL_H
-#define INCLUDED_HSDEC_PACKET_FILTER_IMPL_H
+#ifndef INCLUDED_HSDEC_QPSK_FRAME_SYNC_IMPL_H
+#define INCLUDED_HSDEC_QPSK_FRAME_SYNC_IMPL_H
 
-#include <gnuradio/hsdec/packet_filter.h>
+#include <gnuradio/hsdec/qpsk_frame_sync.h>
 
 namespace gr {
 namespace hsdec {
 
-class packet_filter_impl : public packet_filter
+class qpsk_frame_sync_impl : public qpsk_frame_sync
 {
 private:
     // Nothing to declare in this block.
-    int d_chunk_len;
-    int d_sps;
+    uint32_t g_code;
+    int g_len;
+    int g_block_size;
 
-    std::vector<uint8_t> d_buffer;
-    uint64_t d_start_offset = 0;
+    int d_skip_count = 0;
+    uint32_t d_data_reg = 0;
+    uint32_t d_mask = 0xFFFFFFFF;
+    uint32_t d_threshold = 1;
+    int d_data_reg_bits = 0;
+    uint32_t d_sync_code[4];
 
-    struct FrameInfo {
-        uint64_t offset;
-        int length;
-        bool flip_flag;
-    };
 
 public:
-    packet_filter_impl(int chunk_len, int sps);
-    ~packet_filter_impl();
-
-    void set_size(int size) override;
+    qpsk_frame_sync_impl(uint32_t code, int len, int block_size);
+    ~qpsk_frame_sync_impl();
 
     // Where all the action really happens
     void forecast(int noutput_items, gr_vector_int& ninput_items_required);
@@ -47,4 +45,4 @@ public:
 } // namespace hsdec
 } // namespace gr
 
-#endif /* INCLUDED_HSDEC_PACKET_FILTER_IMPL_H */
+#endif /* INCLUDED_HSDEC_QPSK_FRAME_SYNC_IMPL_H */

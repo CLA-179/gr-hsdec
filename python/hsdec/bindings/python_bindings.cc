@@ -25,6 +25,8 @@ namespace py = pybind11;
     void bind_sequential_mux(py::module& m);
     void bind_frame_sync(py::module& m);
     void bind_packet_filter(py::module& m);
+    void bind_qpsk_frame_sync(py::module& m);
+    void bind_qpsk_packet_filter(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -57,5 +59,7 @@ PYBIND11_MODULE(hsdec_python, m)
     bind_sequential_mux(m);
     bind_frame_sync(m);
     bind_packet_filter(m);
+    bind_qpsk_frame_sync(m);
+    bind_qpsk_packet_filter(m);
     // ) END BINDING_FUNCTION_CALLS
 }

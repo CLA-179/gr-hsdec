@@ -16,18 +16,12 @@
 
 
  
- static const char *__doc_gr_hsdec_packet_filter = R"doc()doc";
+ static const char *__doc_gr_hsdec_qpsk_packet_filter = R"doc()doc";
 
 
- static const char *__doc_gr_hsdec_packet_filter_packet_filter_0 = R"doc()doc";
+ static const char *__doc_gr_hsdec_qpsk_packet_filter_qpsk_packet_filter = R"doc()doc";
 
 
- static const char *__doc_gr_hsdec_packet_filter_packet_filter_1 = R"doc()doc";
-
-
- static const char *__doc_gr_hsdec_packet_filter_make = R"doc()doc";
-
-
- static const char *__doc_gr_hsdec_packet_filter_set_size = R"doc()doc";
+ static const char *__doc_gr_hsdec_qpsk_packet_filter_make = R"doc()doc";
 
   

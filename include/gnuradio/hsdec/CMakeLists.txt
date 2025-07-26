@@ -14,5 +14,7 @@ install(FILES
     tail.h
     sequential_mux.h
     frame_sync.h
-    packet_filter.h DESTINATION include/gnuradio/hsdec
+    packet_filter.h
+    qpsk_frame_sync.h
+    qpsk_packet_filter.h DESTINATION include/gnuradio/hsdec
 )

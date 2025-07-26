@@ -16,6 +16,8 @@ list(APPEND hsdec_sources
     sequential_mux_impl.cc
     frame_sync_impl.cc
     packet_filter_impl.cc
+    qpsk_frame_sync_impl.cc
+    qpsk_packet_filter_impl.cc
 )
 
 set(hsdec_sources "${hsdec_sources}" PARENT_SCOPE)

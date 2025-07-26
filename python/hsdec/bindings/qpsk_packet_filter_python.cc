@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(packet_filter.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a8417c2366f6875755c65a2444113e90)                     */
+/* BINDTOOL_HEADER_FILE(qpsk_packet_filter.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(46ee5dee7f2d765c01b7d3fefa7ac7d5)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,34 +23,27 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/hsdec/packet_filter.h>
+#include <gnuradio/hsdec/qpsk_packet_filter.h>
 // pydoc.h is automatically generated in the build directory
-#include <packet_filter_pydoc.h>
+#include <qpsk_packet_filter_pydoc.h>
 
-void bind_packet_filter(py::module& m)
+void bind_qpsk_packet_filter(py::module& m)
 {
 
-    using packet_filter    = ::gr::hsdec::packet_filter;
+    using qpsk_packet_filter    = ::gr::hsdec::qpsk_packet_filter;
 
 
-    py::class_<packet_filter, gr::block, gr::basic_block,
-        std::shared_ptr<packet_filter>>(m, "packet_filter", D(packet_filter))
+    py::class_<qpsk_packet_filter, gr::block, gr::basic_block,
+        std::shared_ptr<qpsk_packet_filter>>(m, "qpsk_packet_filter", D(qpsk_packet_filter))
 
-        .def(py::init(&packet_filter::make),
+        .def(py::init(&qpsk_packet_filter::make),
            py::arg("chunk_len"),
            py::arg("sps"),
-           D(packet_filter,make)
+           D(qpsk_packet_filter,make)
         )
         
 
 
-
-
-        
-        .def("set_size",&packet_filter::set_size,       
-            py::arg("size"),
-            D(packet_filter,set_size)
-        )
 
         ;
 

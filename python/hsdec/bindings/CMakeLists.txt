@@ -32,7 +32,9 @@ list(APPEND hsdec_python_files
     tail_python.cc
     sequential_mux_python.cc
     frame_sync_python.cc
-    packet_filter_python.cc python_bindings.cc)
+    packet_filter_python.cc
+    qpsk_frame_sync_python.cc
+    qpsk_packet_filter_python.cc python_bindings.cc)
 
 GR_PYBIND_MAKE_OOT(hsdec
    ../../..

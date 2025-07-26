@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "packet_filter_impl.h"
+#include "qpsk_packet_filter_impl.h"
 #include <gnuradio/io_signature.h>
 
 namespace gr {
@@ -15,17 +15,17 @@ namespace hsdec {
 using input_type = unsigned char;
 // #pragma message("set the following appropriately and remove this warning")
 using output_type = unsigned char;
-packet_filter::sptr packet_filter::make(int chunk_len, int sps)
+qpsk_packet_filter::sptr qpsk_packet_filter::make(int chunk_len, int sps)
 {
-    return gnuradio::make_block_sptr<packet_filter_impl>(chunk_len, sps);
+    return gnuradio::make_block_sptr<qpsk_packet_filter_impl>(chunk_len, sps);
 }
 
 
 /*
  * The private constructor
  */
-packet_filter_impl::packet_filter_impl(int chunk_len, int sps)
-    : gr::block("packet_filter",
+qpsk_packet_filter_impl::qpsk_packet_filter_impl(int chunk_len, int sps)
+    : gr::block("qpsk_packet_filter",
                 gr::io_signature::make(
                     1 /* min inputs */, 1 /* max inputs */, sizeof(input_type)),
                 gr::io_signature::make(
@@ -36,29 +36,31 @@ packet_filter_impl::packet_filter_impl(int chunk_len, int sps)
     set_tag_propagation_policy(TPP_DONT); // 自己控制 tag 传递
 }
 
-void packet_filter_impl::set_size(int size)
-{
-    d_chunk_len = size;
-    set_output_multiple(d_chunk_len);
-    set_relative_rate(static_cast<uint64_t>(d_chunk_len * 2),
-                      static_cast<uint64_t>(d_chunk_len/8));
-}
-
 /*
  * Our virtual destructor.
  */
-packet_filter_impl::~packet_filter_impl() {}
+qpsk_packet_filter_impl::~qpsk_packet_filter_impl() {}
 
-void packet_filter_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
+void qpsk_packet_filter_impl::forecast(int noutput_items,
+                                       gr_vector_int& ninput_items_required)
 {
     ninput_items_required[0] =
-        std::max(d_chunk_len / d_sps * 2, noutput_items*8); // 保障输入充足
+        std::max(d_chunk_len / d_sps * 2, noutput_items * 4); // 保障输入充足
 }
 
-int packet_filter_impl::general_work(int noutput_items,
-                                     gr_vector_int& ninput_items,
-                                     gr_vector_const_void_star& input_items,
-                                     gr_vector_void_star& output_items)
+static const uint8_t rot_map[4][4] = 
+{
+    {0, 1, 2, 3},
+    {2, 0, 3, 1},
+    {3, 2, 1, 0},
+    {1, 3, 0, 2}
+};
+
+
+int qpsk_packet_filter_impl::general_work(int noutput_items,
+                                          gr_vector_int& ninput_items,
+                                          gr_vector_const_void_star& input_items,
+                                          gr_vector_void_star& output_items)
 {
     const uint8_t* in = static_cast<const uint8_t*>(input_items[0]);
     uint8_t* out = static_cast<uint8_t*>(output_items[0]);
@@ -76,10 +78,8 @@ int packet_filter_impl::general_work(int noutput_items,
     }
 
     // 如果没有完整的一对 packet_len，先不处理
-    if (packet_starts.size() < 2)
-    {
-        if(packet_starts[0] > 0)
-        {
+    if (packet_starts.size() < 2) {
+        if (packet_starts[0] > 0) {
             consume_each(packet_starts[0]);
         }
         return 0;
@@ -101,7 +101,7 @@ int packet_filter_impl::general_work(int noutput_items,
     std::vector<FrameInfo> valid_frames;
 
     for (auto& tag : sync_tags) {
-        if (pmt::symbol_to_string(tag.key) == "sync_head") {
+        if (pmt::symbol_to_string(tag.key) == "sync_head_0") {
             uint64_t pos = tag.offset;
             int len = pmt::to_long(tag.value);
 
@@ -113,11 +113,9 @@ int packet_filter_impl::general_work(int noutput_items,
 
             // 只要帧有一部分进入有效区域（特别是 frame_end > valid_start）
             if (frame_end > valid_start) {
-                valid_frames.push_back({ frame_start, len , false});
+                valid_frames.push_back({ frame_start, len, 0 });
             }
-        }
-        else if (pmt::symbol_to_string(tag.key) == "sync_head_flip")
-        {
+        } else if (pmt::symbol_to_string(tag.key) == "sync_head_90") {
             uint64_t pos = tag.offset;
             int len = pmt::to_long(tag.value);
 
@@ -129,10 +127,37 @@ int packet_filter_impl::general_work(int noutput_items,
 
             // 只要帧有一部分进入有效区域（特别是 frame_end > valid_start）
             if (frame_end > valid_start) {
-                valid_frames.push_back({ frame_start, len , true});
+                valid_frames.push_back({ frame_start, len, 1 });
+            }
+        } else if (pmt::symbol_to_string(tag.key) == "sync_head_180") {
+            uint64_t pos = tag.offset;
+            int len = pmt::to_long(tag.value);
+
+            uint64_t frame_start = pos;
+            uint64_t frame_end = pos + len;
+
+            if (frame_end > end)
+                continue; // 帧超出区域末尾，丢弃
+
+            // 只要帧有一部分进入有效区域（特别是 frame_end > valid_start）
+            if (frame_end > valid_start) {
+                valid_frames.push_back({ frame_start, len, 2 });
+            }
+        } else if (pmt::symbol_to_string(tag.key) == "sync_head_270") {
+            uint64_t pos = tag.offset;
+            int len = pmt::to_long(tag.value);
+
+            uint64_t frame_start = pos;
+            uint64_t frame_end = pos + len;
+
+            if (frame_end > end)
+                continue; // 帧超出区域末尾，丢弃
+
+            // 只要帧有一部分进入有效区域（特别是 frame_end > valid_start）
+            if (frame_end > valid_start) {
+                valid_frames.push_back({ frame_start, len, 3 });
             }
         }
-        
     }
 
     // 将这些帧复制到输出
@@ -151,25 +176,18 @@ int packet_filter_impl::general_work(int noutput_items,
 
         // 拷贝数据帧
         for (int i = 0; i < f.length && out_idx < noutput_items; ++i) {
-            out[out_idx] = (out[out_idx] << 1) |  (in[rel_offset + i] & 0x1);
-            if (i%8 == 7)
-            {
-                if (f.flip_flag)
-                {
-                    out[out_idx] = ~out[out_idx];
-                }
-                
+            out[out_idx] =
+                (out[out_idx] << 2) | ((rot_map[f.flip_phi][in[rel_offset + i]]) & 0x3);
+            if (i % 4 == 3) {
                 out_idx++;
-
             }
-            
         }
 
         // 复制 sync_head tag 到输出流对应位置
         add_item_tag(0,
-                     nitems_written(0) + out_idx - (f.length / 8),
+                     nitems_written(0) + out_idx - (f.length / 4),
                      pmt::string_to_symbol("sync_head"),
-                     pmt::from_long(f.length / 8));
+                     pmt::from_long(f.length / 4));
     }
 
 
