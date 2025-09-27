@@ -10,7 +10,6 @@
 # Setup library
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
-
 list(APPEND hsdec_sources
     tail_impl.cc
     sequential_mux_impl.cc
@@ -18,6 +17,15 @@ list(APPEND hsdec_sources
     packet_filter_impl.cc
     qpsk_frame_sync_impl.cc
     qpsk_packet_filter_impl.cc
+    squelch_new_impl.cc
+    ldpc_decoder_impl.cc
+    fec/ldpc/variablenode.cpp
+    fec/ldpc/checknode.cpp
+    fec/ldpc/ldpc.cpp
+    fec/ldpc/alist.cc
+    fec/rs/rs.c
+    send_pack_impl.cc
+    rs_4_impl.cc
 )
 
 set(hsdec_sources "${hsdec_sources}" PARENT_SCOPE)

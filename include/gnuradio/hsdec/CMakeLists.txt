@@ -16,5 +16,9 @@ install(FILES
     frame_sync.h
     packet_filter.h
     qpsk_frame_sync.h
-    qpsk_packet_filter.h DESTINATION include/gnuradio/hsdec
+    qpsk_packet_filter.h
+    squelch_new.h
+    ldpc_decoder.h
+    send_pack.h
+    rs_4.h DESTINATION include/gnuradio/hsdec
 )

@@ -5,12 +5,15 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-
 install(FILES
     hsdec_tail.block.yml
     hsdec_sequential_mux.block.yml
     hsdec_frame_sync.block.yml
     hsdec_packet_filter.block.yml
     hsdec_qpsk_frame_sync.block.yml
-    hsdec_qpsk_packet_filter.block.yml DESTINATION share/gnuradio/grc/blocks
+    hsdec_qpsk_packet_filter.block.yml
+    hsdec_squelch_new.block.yml
+    hsdec_ldpc_decoder.block.yml
+    hsdec_send_pack.block.yml
+    hsdec_rs_4.block.yml DESTINATION share/gnuradio/grc/blocks
 )

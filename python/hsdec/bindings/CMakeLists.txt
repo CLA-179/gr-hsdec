@@ -27,14 +27,17 @@ include(GrPybind)
 ########################################################################
 # Python Bindings
 ########################################################################
-
 list(APPEND hsdec_python_files
     tail_python.cc
     sequential_mux_python.cc
     frame_sync_python.cc
     packet_filter_python.cc
     qpsk_frame_sync_python.cc
-    qpsk_packet_filter_python.cc python_bindings.cc)
+    qpsk_packet_filter_python.cc
+    squelch_new_python.cc
+    ldpc_decoder_python.cc
+    send_pack_python.cc
+    rs_4_python.cc python_bindings.cc)
 
 GR_PYBIND_MAKE_OOT(hsdec
    ../../..

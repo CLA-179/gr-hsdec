@@ -27,6 +27,10 @@ namespace py = pybind11;
     void bind_packet_filter(py::module& m);
     void bind_qpsk_frame_sync(py::module& m);
     void bind_qpsk_packet_filter(py::module& m);
+    void bind_squelch_new(py::module& m);
+    void bind_ldpc_decoder(py::module& m);
+    void bind_send_pack(py::module& m);
+    void bind_rs_4(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -61,5 +65,9 @@ PYBIND11_MODULE(hsdec_python, m)
     bind_packet_filter(m);
     bind_qpsk_frame_sync(m);
     bind_qpsk_packet_filter(m);
+    bind_squelch_new(m);
+    bind_ldpc_decoder(m);
+    bind_send_pack(m);
+    bind_rs_4(m);
     // ) END BINDING_FUNCTION_CALLS
 }
