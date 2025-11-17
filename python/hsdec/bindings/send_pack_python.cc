@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(send_pack.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(efadba8a1be0f01362ed190a9463cc41)                     */
+/* BINDTOOL_HEADER_FILE_HASH(5e52c39f5a7fac476e9bf39e864a579c)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -30,13 +30,15 @@ namespace py = pybind11;
 void bind_send_pack(py::module& m)
 {
 
-    using send_pack    = gr::hsdec::send_pack;
+    using send_pack    = ::gr::hsdec::send_pack;
 
 
     py::class_<send_pack, gr::sync_block, gr::block, gr::basic_block,
         std::shared_ptr<send_pack>>(m, "send_pack", D(send_pack))
 
         .def(py::init(&send_pack::make),
+           py::arg("scra"),
+           py::arg("empty"),
            D(send_pack,make)
         )
         
