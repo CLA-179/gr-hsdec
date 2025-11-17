@@ -22,7 +22,7 @@ private:
     void pmt_in_callback(pmt::pmt_t msg);
 
 public:
-    send_pack_impl();
+    send_pack_impl(bool scra, int empty);
     ~send_pack_impl();
 
     // Where all the action really happens

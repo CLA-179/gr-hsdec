@@ -4,7 +4,7 @@ category: '[hsdec]'
 
 templates:
   imports: from gnuradio import hsdec
-  make: hsdec.send_pack()
+  make: hsdec.send_pack(${scramble}, ${empty})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:
@@ -17,9 +17,14 @@ parameters:
 #   label: FIX ME:
 #   dtype: string
 #   default: You need to fill in your grc/hsdec_send_pack.block.yaml
-#- id: ...
-#  label: ...
-#  dtype: ...
+- id: scramble
+  label: Use Scramble in empty frame
+  dtype: bool
+  default: True
+- id: empty
+  label: Empty Frame Fill Content
+  dtype: int
+  default: 0xAA
 
 #  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
 #  Keys include:

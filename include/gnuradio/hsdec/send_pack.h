@@ -32,7 +32,7 @@ public:
      * class. hsdec::send_pack::make is the public interface for
      * creating new instances.
      */
-    static sptr make();
+    static sptr make(bool scra, int empty);
 };
 
 } // namespace hsdec
