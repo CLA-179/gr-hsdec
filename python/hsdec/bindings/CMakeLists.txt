@@ -37,7 +37,9 @@ list(APPEND hsdec_python_files
     squelch_new_python.cc
     ldpc_decoder_python.cc
     send_pack_python.cc
-    rs_4_python.cc python_bindings.cc)
+    rs_4_python.cc
+    variable_pack_enc_python.cc
+    variable_pack_dec_python.cc python_bindings.cc)
 
 GR_PYBIND_MAKE_OOT(hsdec
    ../../..

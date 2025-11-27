@@ -15,5 +15,7 @@ install(FILES
     hsdec_squelch_new.block.yml
     hsdec_ldpc_decoder.block.yml
     hsdec_send_pack.block.yml
-    hsdec_rs_4.block.yml DESTINATION share/gnuradio/grc/blocks
+    hsdec_rs_4.block.yml
+    hsdec_variable_pack_enc.block.yml
+    hsdec_variable_pack_dec.block.yml DESTINATION share/gnuradio/grc/blocks
 )
