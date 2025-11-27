@@ -104,7 +104,7 @@ int variable_pack_dec_impl::general_work(int noutput_items,
                 continue;
             }
 
-            if (d_len == 0 && d_len_index == 0)
+            if (d_len == 0 && d_len_index == 0 || d_len > 2048)
             {
                 d_sync_flag = false;
                 d_data = false;
