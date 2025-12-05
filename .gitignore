@@ -3,3 +3,4 @@
 /examples/**/*.py
 /examples/**/*.bin
 /examples/**/*.wav
+/examples/**/*.desktop
