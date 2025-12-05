@@ -20,5 +20,7 @@ install(FILES
     squelch_new.h
     ldpc_decoder.h
     send_pack.h
-    rs_4.h DESTINATION include/gnuradio/hsdec
+    rs_4.h
+    variable_pack_enc.h
+    variable_pack_dec.h DESTINATION include/gnuradio/hsdec
 )

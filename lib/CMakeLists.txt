@@ -26,6 +26,8 @@ list(APPEND hsdec_sources
     fec/rs/rs.c
     send_pack_impl.cc
     rs_4_impl.cc
+    variable_pack_enc_impl.cc
+    variable_pack_dec_impl.cc
 )
 
 set(hsdec_sources "${hsdec_sources}" PARENT_SCOPE)

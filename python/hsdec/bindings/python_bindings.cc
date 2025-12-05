@@ -31,6 +31,8 @@ namespace py = pybind11;
     void bind_ldpc_decoder(py::module& m);
     void bind_send_pack(py::module& m);
     void bind_rs_4(py::module& m);
+    void bind_variable_pack_enc(py::module& m);
+    void bind_variable_pack_dec(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -69,5 +71,7 @@ PYBIND11_MODULE(hsdec_python, m)
     bind_ldpc_decoder(m);
     bind_send_pack(m);
     bind_rs_4(m);
+    bind_variable_pack_enc(m);
+    bind_variable_pack_dec(m);
     // ) END BINDING_FUNCTION_CALLS
 }
