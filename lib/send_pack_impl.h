@@ -20,6 +20,8 @@ private:
     pmt::pmt_t d_in_port;
 
     void pmt_in_callback(pmt::pmt_t msg);
+    int rfsend_cnt = 0;
+    bool d_scra;
 
 public:
     send_pack_impl(bool scra, int empty);

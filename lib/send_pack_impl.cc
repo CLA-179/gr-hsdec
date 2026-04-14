@@ -11,7 +11,7 @@
 
 std::deque<uint8_t*> fifo;
 
-uint8_t empty_frame[1024];
+static uint8_t empty_frame[1024];
 
 namespace gr {
 namespace hsdec {
@@ -36,16 +36,15 @@ send_pack_impl::send_pack_impl(bool scra, int empty)
     message_port_register_in(d_in_port);
     set_msg_handler(d_in_port, [this](const pmt::pmt_t& msg) { pmt_in_callback(msg); });
     set_min_output_buffer(1024*4);
+    rfsend_cnt = 0;
+    d_scra = scra;
 
     uint8_t buf[1024];
-    buf[0] = 0x1A;
-    buf[1] = 0xCF;
-    buf[2] = 0xFC;
-    buf[3] = 0x1D;
+    
 
     if (empty >= 0 && empty < 0x100)
     {
-        memset(buf, empty & 0xFF, 1020);
+        memset(buf + 4, empty & 0xFF, 1020);
     }
     else
     {
@@ -57,13 +56,36 @@ send_pack_impl::send_pack_impl(bool scra, int empty)
             buf[i] = i & 0xF | 0xF0 & (i * 47);
         }
     }
+    buf[0] = 0x1A;
+    buf[1] = 0xCF;
+    buf[2] = 0xFC;
+    buf[3] = 0x1D;
+    buf[4] = 0x52;
+    buf[5] = 0x7F;
+    buf[9] = 0x00;
     
+    buf[4+26] = 0x00;
+    buf[4+27] = 0x00;
+    buf[4+28] = 0x00;
+    buf[4+29] = 0x00;
+    buf[4+30] = 0x00;
+    buf[4+31] = 0x00;
     encoder_rs_4(buf, empty_frame);
+    
+    /*
+    for (int i = 0; i < 1024; i ++)
+    {
+    	printf("%02X ", empty_frame[i]);
+    }
+    printf("\n");
+    */
 
     if (scra)
     {
-        LOS_ccsds_scramble(empty_frame+4, 1020, 0xFF, 0x95);
+        //LOS_ccsds_scramble(empty_frame+4, 1020, 0xFF, 0x95);
     }
+    
+    
     
 }
 
@@ -104,8 +126,6 @@ int send_pack_impl::work(int noutput_items,
     int out_items = 0;
 
     int maxpackes = noutput_items / 1024;
-    
-    static int rfsend_cnt = 0;
 
     for (int i = 0; i < maxpackes; i++) {
         if (!fifo.empty() && noutput_items - out_items >= 1024) {
@@ -126,13 +146,26 @@ int send_pack_impl::work(int noutput_items,
             // out[i * 1024 + 5] = 0xA2;
             
             // memset(out + i * 1024 + 6, 0xAA, 1020);
-
-            memcpy(out + i * 1024, empty_frame, 1024);
-            out[i * 1024 + 0] = 0x1A;
-            out[i * 1024 + 1] = 0xCF;
-            out[i * 1024 + 2] = 0xFC;
-            out[i * 1024 + 3] = 0x1D;
+            // static unsigned int cnt = 0;
+			uint8_t buf[1024];
+            memcpy(buf , empty_frame, 1024);
+            buf[0] = 0x1A;
+            buf[1] = 0xCF;
+            buf[2] = 0xFC;
+            buf[3] = 0x1D;
+            buf[4] = 0x52;
+    		buf[5] = 0x7F;
+            buf[6] = (rfsend_cnt & 0x00FF0000) >> 16;
+            buf[7] = (rfsend_cnt & 0x0000FF00) >> 8;
+            buf[8] = (rfsend_cnt & 0x000000FF) >> 0;
+            rfsend_cnt ++;
             // memset(out+1024*i+4, 0xEA, 892);
+            encoder_rs_4(buf, (uint8_t*)(out + i * 1024));
+            
+            if (d_scra)
+			{
+				LOS_ccsds_scramble((unsigned char*)(out + i * 1024 + 4), 1020, 0xFF, 0x95);
+			}
 
         }
         out_items += 1024;
